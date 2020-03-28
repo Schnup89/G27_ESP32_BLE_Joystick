@@ -5,6 +5,7 @@
 Lib's used
 ----------
 Bluetooth Gamepad: https://github.com/lemmingDev/ESP32-BLE-Gamepad
+
 Rotary-Encoder: https://github.com/dmachard/KY040-rotary
 
 I love my G27-Racing-Wheel and needed more buttons, so I've extended it with two rotary buttons.
