@@ -9,7 +9,9 @@ For my Project I'm using two ky-040 Rotary Encoders as inputs, a ESP32 and a 3D-
 You will find the 3D-Model on Thingsiverse: https://www.thingiverse.com/thing:4246428
 
 Connect the + with 5V (VIN-Pin)
+
 Connect the - wiht GND
+
 Connect the CLK, DT, and SW Buttons as defined in the code
 
 
