@@ -2,17 +2,26 @@
 
 !!! I'm not a programmer and this is just my personal code shared with you, so don't expect a clean or ressource saving code :)
 
+I love my G27-Racing-Wheel and needed more buttons, so I've extended it with two rotary buttons.
+
+For my Project I'm using two ky-040 Rotary Encoders as inputs, a ESP32 and a 3D-Printed Plate for the G27.
+
 Lib's used
 ----------
 Bluetooth Gamepad: https://github.com/lemmingDev/ESP32-BLE-Gamepad
 
 Rotary-Encoder: https://github.com/dmachard/KY040-rotary
 
-I love my G27-Racing-Wheel and needed more buttons, so I've extended it with two rotary buttons.
 
-For my Project I'm using two ky-040 Rotary Encoders as inputs, a ESP32 and a 3D-Printed Plate for the G27.
+
+3D-Model
+--------
 
 You will find the 3D-Model on Thingsiverse: https://www.thingiverse.com/thing:4246428
+
+
+Wiring
+------
 
 Connect the + with 5V (VIN-Pin)
 
