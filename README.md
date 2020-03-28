@@ -6,6 +6,12 @@ I love my G27-Racing-Wheel and needed more buttons, so I've extended it with two
 
 For my Project I'm using two ky-040 Rotary Encoders as inputs, a ESP32 and a 3D-Printed Plate for the G27.
 
+You will find the 3D-Model on Thingsiverse: https://www.thingiverse.com/thing:4246428
+
+Connect the + with 5V (VIN-Pin)
+Connect the - wiht GND
+Connect the CLK, DT, and SW Buttons as defined in the code
+
 
 
 ![alt text](https://github.com/Schnup89/G27_ESP32_BLE_Joystick/blob/master/G27-Rotarys.jpg?raw=true)
