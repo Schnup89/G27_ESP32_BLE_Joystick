@@ -34,7 +34,7 @@ void fKnobLeft_Pressed(void) {
 
 void fKnobLeft_CClock(void) {
   Serial.println("KnobLeft: rotating right");
-  nSendBtn = (BUTTON_1);
+  nSendBtn = (BUTTON_2);
 }
 
 void fKnobLeft_Clock(void) {
