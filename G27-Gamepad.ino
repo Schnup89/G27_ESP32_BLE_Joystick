@@ -1,5 +1,6 @@
 #include <BleGamepad.h> 
-#include "KY040rotary.h"
+#include <Rotary.h>
+#include <EasyButton.h>
 
 BleGamepad bleGamepad;
 
@@ -9,8 +10,6 @@ TaskHandle_t TaskBTN;
 
 //Global Variables Thread
 int nSendBtn = 0;
-int nLastBtn = 0;   //Debounce, see function BTCMD
-
 
 //KnobLeft-Pins
 const int pKnobLeftCLK = 25;
@@ -22,54 +21,52 @@ const int pKnobRightDT = 27;
 const int pKnobRightSW = 02;
 
 //Define Rotary Object
-KY040 KnobLeft(pKnobLeftCLK,pKnobLeftDT,pKnobLeftSW);
-KY040 KnobRight(pKnobRightCLK,pKnobRightDT,pKnobRightSW);
+Rotary KnobLeft = Rotary(pKnobLeftCLK,pKnobLeftDT);
+Rotary KnobRight =  Rotary(pKnobRightCLK,pKnobRightDT);
+EasyButton ButtonLeft(pKnobLeftSW);
+EasyButton ButtonRight(pKnobRightSW);
 
-
-//Set Command and Debounce Rotarys
-void BTCmd(int btn) {
-  //Dont debounce Buttons
-  if (btn == BUTTON_1 || btn == BUTTON_4) {
-    nSendBtn = btn; 
-  }else{
-    //Debounce Rotarys
-    if (nLastBtn == btn) {
-      nSendBtn = btn;
-    }
-    nLastBtn = btn;
-  }
-}
 
 void fKnobLeft_Pressed(void) {
   Serial.println("KnobLeft: clicked");
-  BTCmd(BUTTON_1);
+  nSendBtn = (BUTTON_1);
 }
 
 void fKnobLeft_CClock(void) {
-  Serial.println("KnobLeft: rotating left");
-  BTCmd(BUTTON_2);
+  Serial.println("KnobLeft: rotating right");
+  nSendBtn = (BUTTON_1);
 }
 
 void fKnobLeft_Clock(void) {
-  Serial.println("KnobLeft: rotating right");
-  BTCmd(BUTTON_3);
+  Serial.println("KnobLeft: rotating left");
+  nSendBtn = (BUTTON_3);
 }
 
 void fKnobRight_Pressed(void) {
   Serial.println("KnobRight: clicked");
-  BTCmd(BUTTON_4);
+  nSendBtn = (BUTTON_4);
 }
 
 void fKnobRight_CClock(void) {
-  Serial.println("KnobRight: rotating left");
-  BTCmd(BUTTON_5);
+  Serial.println("KnobRight: rotating right");
+  nSendBtn = (BUTTON_5);
 }
 
 void fKnobRight_Clock(void) {
-  Serial.println("KnobRight: rotating right");
-  BTCmd(BUTTON_6);
+  Serial.println("KnobRight: rotating left");
+  nSendBtn = (BUTTON_6);
 }
 
+void ButtonLeftISR()
+{
+  //When button is being used through external interrupts, parameter INTERRUPT must be passed to read() function
+  ButtonLeft.read(INTERRUPT);
+}
+void ButtonRightISR()
+{
+  //When button is being used through external interrupts, parameter INTERRUPT must be passed to read() function
+  ButtonRight.read(INTERRUPT);
+}
 
 void setup() {
   Serial.begin(115200);
@@ -79,6 +76,24 @@ void setup() {
   bleGamepad.begin();
   //!!!! GamePad Bluetooth
 
+  //#### Setup Buttons
+  ButtonLeft.begin();
+  ButtonRight.begin();
+  ButtonLeft.onPressed(fKnobLeft_Pressed);
+  ButtonRight.onPressed(fKnobRight_Pressed);
+  if (ButtonLeft.supportsInterrupt())
+  {
+    ButtonLeft.enableInterrupt(ButtonLeftISR);
+    Serial.println("Button will be used through interrupts");
+  }
+  if (ButtonRight.supportsInterrupt())
+  {
+    ButtonRight.enableInterrupt(ButtonRightISR);
+    Serial.println("Button will be used through interrupts");
+  }
+  //!!!! Setup Buttons
+
+  
   //#### Set Rotary to CPU 1
   xTaskCreatePinnedToCore(
                 loopRotary,   /* Task function. */
@@ -104,7 +119,6 @@ void setup() {
 void procBTCMD(void * pvParameters ) {
   while (1) {
     if (nSendBtn != 0) {
-      Serial.println("Send");
       int btn = nSendBtn;
       if(bleGamepad.isConnected()) {
         bleGamepad.press(btn);
@@ -119,32 +133,22 @@ void procBTCMD(void * pvParameters ) {
 
 //Send Bluetooth Button on Change of nSendBtn 
 void loopRotary(void * pvParameters ) {
-  //Initialize the Rotarys
-  Serial.println("Init Rotarys!");
-  if (!KnobLeft.Begin() ) {
-    Serial.println("unable to init rotate button");
-    while (1);
-  }
-  if (!KnobRight.Begin() ) {
-    Serial.println("unable to init rotate button");
-    while (1);
-  }
-  //Set Functions on Event
-  KnobLeft.OnButtonClicked(fKnobLeft_Pressed);
-  KnobLeft.OnButtonLeft(fKnobLeft_CClock);
-  KnobLeft.OnButtonRight(fKnobLeft_Clock);
-  KnobRight.OnButtonClicked(fKnobRight_Pressed);
-  KnobRight.OnButtonLeft(fKnobRight_CClock);
-  KnobRight.OnButtonRight(fKnobRight_Clock);
-  Serial.println("KY-040 rotary encoder OK");
-  
   //Proccess Rotray
   while (true) {
-    KnobLeft.Process( millis() );
-    KnobRight.Process( millis() );
+    unsigned char KLres = KnobLeft.process();
+    if (KLres == DIR_CW) {
+      fKnobLeft_Clock();
+    } else if (KLres == DIR_CCW) {
+      fKnobLeft_CClock();
+    }
+    unsigned char KRres = KnobRight.process();
+    if (KRres == DIR_CW) {
+      fKnobRight_Clock();
+    } else if (KRres == DIR_CCW) {
+      fKnobRight_CClock();
+    }
   }
 }
-
 
 void loop() {
 
