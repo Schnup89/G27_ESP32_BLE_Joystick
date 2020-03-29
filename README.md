@@ -10,7 +10,9 @@ Lib's used
 ----------
 Bluetooth Gamepad: https://github.com/lemmingDev/ESP32-BLE-Gamepad
 
-Rotary-Encoder: https://github.com/dmachard/KY040-rotary
+Rotary-Encoder: https://github.com/buxtronix/arduino/tree/master/libraries/Rotary
+
+Buttons: https://github.com/evert-arias/EasyButton
 
 
 
