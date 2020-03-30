@@ -14,7 +14,7 @@ int nSendBtn = 0;
 //KnobLeft-Pins
 const int pKnobLeftCLK = 25;
 const int pKnobLeftDT = 05;
-const int pKnobLeftSW = 12;
+const int pKnobLeftSW = 12;   //Change this PIN to 11 or 13 since it's a bootstrapping-pin, see: https://github.com/espressif/esp-idf/tree/master/examples/storage/sd_card#note-about-gpio12-esp32-only
 //KnobRight-Pins
 const int pKnobRightCLK = 19;
 const int pKnobRightDT = 27;
