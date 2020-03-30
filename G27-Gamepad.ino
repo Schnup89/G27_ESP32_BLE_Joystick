@@ -104,7 +104,7 @@ void setup() {
                 &TaskBTN,      /* Task handle to keep track of created task */
                 1);          /* pin task to core 0 */ 
   
-  //#### Set Bluetooth to CPU 1  
+  //#### Set Bluetooth to CPU 0 
   xTaskCreatePinnedToCore(
                 procBTCMD,   /* Task function. */
                 "BTSend",     /* name of task. */
