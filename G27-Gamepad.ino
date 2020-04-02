@@ -131,7 +131,7 @@ void procBTCMD(void * pvParameters ) {
   }
 }
 
-//Send Bluetooth Button on Change of nSendBtn 
+//Process rotarys
 void loopRotary(void * pvParameters ) {
   //Proccess Rotray
   while (true) {
